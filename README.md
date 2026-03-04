@@ -19,6 +19,8 @@ The turtle:
 
 This was my first autonomous navigation project in ROS2.
 
+This project demonstrates the practical implementation of closed-loop feedback control in a simulated robotic system.
+
 ## How to run
 
 **Terminal 1 (Start simulator):**
@@ -30,10 +32,35 @@ ros2 run turtlesim turtlesim_node
 ```bash
 cd ~/ros2_ws
 source install/setup.bash
-python3 src/turtlesim_goal/turtlesim_goal/turtle_goal_node.py
+ros2 run turtlesim_goal turtle_goal_node
 ```
 
 The turtle will navigate to (9.0, 5.0) by default.
+
+**Control Law**
+
+The controller uses proportional feedback:
+
+Linear velocity:
+```bash
+v = k_linear * distance
+```
+
+Angular velocity:
+```bash
+ω = k_angular * angle_error
+```
+Where:
+```bash
+distance = √((x_goal − x)^2 + (y_goal − y)^2)
+angle_error = atan2(dy, dx) − θ
+```
+
+## System Architecture
+
+- Subscribes to `/turtle1/pose`
+- Publishes velocity commands to `/turtle1/cmd_vel`
+- Runs control loop at 10 Hz using a ROS2 timer
 
 ## Requirements
 
